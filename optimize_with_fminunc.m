@@ -1,11 +1,14 @@
 %% optimizer function: 
 % Optimize with Fminunc
 
-function [transformation_matrix] = optimize_with_fminunc(KDtree,model_ptcloud,scan_ptcloud,tx,ty,tz,rx,ry,rz,optm_method,error_fun)
+function [transformation_matrix] = optimize_with_fminunc(model_ptcloud,scan_ptcloud,tx,ty,tz,rx,ry,rz,optm_method,error_fun)
+
+global KDtree;
+
 x = [tx,ty,tz,rx,ry,rz];
 x0 = [0 0 0 0 0 0];
 
-fun = @(x)error_function(x,KDtree,model_ptcloud,scan_ptcloud,optm_method,error_fun);
+fun = @(x)error_function(x,model_ptcloud,scan_ptcloud,optm_method,error_fun);
 
 options = optimoptions(@fminunc,'Display','iter','Algorithm','quasi-newton');
 [x,fval] = fminunc(fun,x0,options)

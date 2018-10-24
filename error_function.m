@@ -1,7 +1,9 @@
 %% Error Function:
 % Includes 4 variants of error: sum(all_distances), mean(all_distances), rms(all_distances) and max(all_distances)
 
-function [Error] = error_function(x,KDtree,model_ptcloud,scan_ptcloud,optm_method,error_fun)
+function [Error,scan_ptcloud] = error_function(x,model_ptcloud,scan_ptcloud,optm_method,error_fun)
+global KDtree;
+
 % cla;
 %
 % scatter3d(model_ptcloud,'.');
@@ -26,7 +28,7 @@ elseif optm_method == 'use_fminunc'
     rotation_mat = eul2rotm([rz,ry,rx]);
 end
 
-[scan_ptcloud,corresponding_val_from_model_ptcloud] = correspondance_with_near_neighbour_for_optimization(KDtree,model_ptcloud,scan_ptcloud);
+[scan_ptcloud,corresponding_val_from_model_ptcloud] = correspondance_with_near_neighbour_for_optimization(model_ptcloud,scan_ptcloud);
 translation_mat = [tx;ty;tz];
 transformation_matrix = [rotation_mat,translation_mat;0 0 0 1];
 transformed_data = apply_transformation(scan_ptcloud,transformation_matrix);
