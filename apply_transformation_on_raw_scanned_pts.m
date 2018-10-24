@@ -27,12 +27,9 @@ else
 end
 
 % getting correspondance over transfrmed pts for normal info
-corresponding_val_from_model_ptcloud_normals = zeros(size(transformed_pts,1),3);
 num_of_neighbours = 1;
-for i = 1:size(transformed_pts,1)
-    idx = knnsearch(KDtree,transformed_pts(i,:),'K',num_of_neighbours);
-    corresponding_val_from_model_ptcloud_normals(i,:) = model_ptcloud_normals(idx,:);
-end
+idx = knnsearch(KDtree,transformed_pts,'K',num_of_neighbours);
+corresponding_val_from_model_ptcloud_normals = model_ptcloud_normals(idx,:);
 
 corresponding_val_from_model_ptcloud_normals = zeros(size(corresponding_val_from_model_ptcloud_normals,1),3) + [0 0 1];
 [bx,by,bz] = compute_TCP_new(transformed_pts,corresponding_val_from_model_ptcloud_normals);

@@ -6,20 +6,14 @@ dbstop if error;
 % profile on;
 
 global main_dir;
-global Seed_T;
-global tool_T;
-global raw_scanned_pts_path_dir;
-global raw_scanned_pts_file_name;
-global raw_scanned_pts_wrt_tcp_file_name;
-global scan_ptcloud_file;
+global Seed_T tool_T Complete_T KDtree;
+global raw_scanned_pts_path_dir raw_scanned_pts_file_name raw_scanned_pts_wrt_tcp_file_name;
 global path_for_storing_sample_data;
-global model_ptcloud_file;
-global input_file;
-global output_file_path;
-global output_file;
+global input_file input_file_pts_from_kuka_scan;
+global output_file_path output_file;
 global stl_name;
-global KDtree;
-global input_file_pts_from_kuka_scan;
+global model_ptcloud_normals;
+global tcp_publisher_pts_are_flange_pts;
 
 %% Definitions and Inputs
 %%%%%%%%%%%%  input directries  %%%%%%%%%%%%%
@@ -96,9 +90,9 @@ Final_T = inv(Complete_T)
 
 %% tests and geting complete transformation
 
-[T_Final,pts,bx_transformed,by_transformed,bz_transformed] = ...
-    apply_transformation_on_raw_scanned_pts(input_file_pts_from_kuka_scan,...
-    Complete_T,model_ptcloud_normals,tcp_publisher_pts_are_flange_pts);    
-disp(size(pts));
+% input_file_pts_from_kuka_scan = true;
+% input_file = raw_scanned_pts_file_name;
+
+% run evaluate_vals.m
 
 % profile viewer;

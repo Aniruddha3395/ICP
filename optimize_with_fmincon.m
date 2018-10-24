@@ -7,9 +7,7 @@ x = [tx,ty,tz,q0,q1,q2,q3];
 x0 = [0 0 0 1 0 0 0];
 
 
-for i = 1:10
-    
-    % error_fun = 'sum_d';
+for i = 1:1
     fun = @(x)error_function(x,model_ptcloud,scan_ptcloud,optm_method,error_fun);
     nonlcon = @inq_constaints;
     options = optimoptions(@fmincon,'Display','iter','MaxIterations',40);%,'Algorithm','interior-point','DiffMaxChange',1e-8,...
@@ -26,11 +24,8 @@ for i = 1:10
         x0 = x;
     else
         break;
+    end
 end
-
-end
-
-
 % error_fun = 'mean_d';
 % fun = @(x)error_function2(x,model_ptcloud,scan_ptcloud,optm_method,error_fun);
 % nonlcon = @inq_constaints;
@@ -47,21 +42,17 @@ end
 % %     'FunctionTolerance',1e-8,'StepTolerance',1e-10);
 % [x,fval] = fmincon(fun,x0,[],[],[],[],[],[],nonlcon,options)
 
-
 rotation_mat = quat2rotm([x(4) x(5) x(6) x(7)]);
 translation_mat = [x(1);x(2);x(3)];
-
 transformation_matrix = [rotation_mat,translation_mat;0 0 0 1];
 transformed_data = apply_transformation(scan_ptcloud,transformation_matrix);
-
 hold on;
 scatter3d(transformed_data,'*');
 
     function [c,ceq] = inq_constaints(x)
         c = 0;
-        ceq = (x(4)^2) + (x(5)^2) + (x(6)^2) + (x(7)^2) - 1;
+        ceq = (x(4)^2)+(x(5)^2)+(x(6)^2)+(x(7)^2)-1;
     end
-
 end
 
 
