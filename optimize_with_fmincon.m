@@ -1,31 +1,132 @@
 %% optimizer function:
 % Optimize with Fmincon
 
-function [transformation_matrix] = optimize_with_fmincon(model_ptcloud,scan_ptcloud,tx,ty,tz,q0,q1,q2,q3,optm_method,error_fun)
+function [transformation_matrix,fval] = optimize_with_fmincon(model_ptcloud,scan_ptcloud,tx,ty,tz,q0,q1,q2,q3,optm_method,error_fun)
 
 x = [tx,ty,tz,q0,q1,q2,q3];
 x0 = [0 0 0 1 0 0 0];
 
+fun = @(x)error_function(x,model_ptcloud,scan_ptcloud,optm_method,error_fun);
+nonlcon = @inq_constaints;
+options = optimoptions(@fmincon);
+options.Display = 'none';
+options.MaxIterations = 200;
+% options.UseParallel = true;
+% options.StepTolerance = 1e-10;
+% options.Algorithm = 'interior-point';
+% options.DiffMaxChange = 1e-8;
+% options.FunctionTolerance = 1e-8;
 
-for i = 1:1
-    fun = @(x)error_function(x,model_ptcloud,scan_ptcloud,optm_method,error_fun);
-    nonlcon = @inq_constaints;
-    options = optimoptions(@fmincon,'Display','iter','MaxIterations',40);%,'Algorithm','interior-point','DiffMaxChange',1e-8,...
-    %     'FunctionTolerance',1e-8,'StepTolerance',1e-10);
-    [x,fval] = fmincon(fun,x0,[],[],[],[],[],[],nonlcon,options)
-    
-    if fval>2
-        x(1) = x(1) + randi([-1,1],1,1)*4;
-        x(2) = x(2) + randi([-1,1],1,1)*4;
-        x(3) = x(3) + randi([-1,1],1,1)*4;
-        x(4) = x(4) + randi([-1,1],1,1)*0.05;
-        x(5) = x(5) + randi([-1,1],1,1)*0.05;
-        x(6) = x(6) + randi([-1,1],1,1)*0.05;
-        x0 = x;
-    else
-        break;
-    end
-end
+[x,fval,~,output] = fmincon(fun,x0,[],[],[],[],[],[],nonlcon,options);
+% disp([fval, output.iterations]);
+
+
+% 
+% err1 = max(x_val - x0);
+% while(fval>1)
+%     % do some perturbabtion
+%     x_curr = x_val;
+%     x_val(1) = x_val(1)+(-40 + 80*rand(1));
+%     [x_new,fval_new,~,output] = fmincon(fun,x_val,[],[],[],[],[],[],nonlcon,options);
+%     disp([fval_new, output.iterations]);
+%     if fval_new<fval
+%         x_val = x_new;
+%     else
+%         x_val = x_curr;
+%     end
+%     % do some perturbabtion
+%     x_curr = x_val;
+%     x_val(2) = x_val(2)+(-40 + 80*rand(1));
+%     [x_new,fval_new,~,output] = fmincon(fun,x_val,[],[],[],[],[],[],nonlcon,options);
+%     disp([fval_new, output.iterations]);
+%     if fval_new<fval
+%         x_val = x_new;
+%     else
+%         x_val = x_curr;
+%     end
+%         % do some perturbabtion
+%     x_curr = x_val;
+%     x_val(3) = x_val(3)+(-40 + 80*rand(1));
+%     [x_new,fval_new,~,output] = fmincon(fun,x_val,[],[],[],[],[],[],nonlcon,options);
+%     disp([fval_new, output.iterations]);
+%     if fval_new<fval
+%         x_val = x_new;
+%     else
+%         x_val = x_curr;
+%     end
+%     % do some perturbabtion
+%     x_curr = x_val;
+%     x_val(4) = x_val(4)+(-0.05 + 0.1*rand(1));
+%     [x_new,fval_new,~,output] = fmincon(fun,x_val,[],[],[],[],[],[],nonlcon,options);
+%     disp([fval_new, output.iterations]);
+%     if fval_new<fval
+%         x_val = x_new;
+%     else
+%         x_val = x_curr;
+%     end
+%     % do some perturbabtion
+%     x_curr = x_val;
+%     x_val(5) = x_val(5)+(-0.05 + 0.1*rand(1));
+%     [x_new,fval_new,~,output] = fmincon(fun,x_val,[],[],[],[],[],[],nonlcon,options);
+%     disp([fval_new, output.iterations]);
+%     if fval_new<fval
+%         x_val = x_new;
+%     else
+%         x_val = x_curr;
+%     end
+%     % do some perturbabtion
+%     x_curr = x_val;
+%     x_val(6) = x_val(6)+(-0.05 + 0.1*rand(1));
+%     [x_new,fval_new,~,output] = fmincon(fun,x_val,[],[],[],[],[],[],nonlcon,options);
+%     disp([fval_new, output.iterations]);
+%     if fval_new<fval
+%         x_val = x_new;
+%     else
+%         x_val = x_curr;
+%     end
+%     % do some perturbabtion
+%     x_curr = x_val;
+%     x_val(7) = x_val(7)+(-0.05 + 0.1*rand(1));
+%     [x_new,fval_new,~,output] = fmincon(fun,x_val,[],[],[],[],[],[],nonlcon,options);
+%     disp([fval_new, output.iterations]);
+%     if fval_new<fval
+%         x_val = x_new;
+%     else
+%         x_val = x_curr;
+%     end
+% 
+% end
+%     
+
+
+% for i = 1:10
+%     fun = @(x)error_function(x,model_ptcloud,scan_ptcloud,optm_method,error_fun);
+%     nonlcon = @inq_constaints;
+%     options = optimoptions(@fmincon);
+%     options.Display = 'none';
+%     options.MaxIterations = 400;
+%     options.StepTolerance = 1e-10;
+%     options.Algorithm = 'interior-point';
+%     options.DiffMaxChange = 1e-8;
+%     options.FunctionTolerance = 1e-8;
+%
+%     [x,fval,~,output] = fmincon(fun,x0,[],[],[],[],[],[],nonlcon,options);
+%     disp([fval, output.iterations]);
+%     if fval>0.5
+%         x(1) = x(1) + randi([-1,1],1,1)*1;
+%         x(2) = x(2) + randi([-1,1],1,1)*1;
+%         x(3) = x(3) + randi([-1,1],1,1)*1;
+%         x(4) = x(4) + randi([-1,1],1,1)*0.001;
+%         x(5) = x(5) + randi([-1,1],1,1)*0.001;
+%         x(6) = x(6) + randi([-1,1],1,1)*0.001;
+%         x(7) = x(7) + randi([-1,1],1,1)*0.001;
+%         x0 = x;
+%     else
+%         break;
+%     end
+% end
+
+
 % error_fun = 'mean_d';
 % fun = @(x)error_function2(x,model_ptcloud,scan_ptcloud,optm_method,error_fun);
 % nonlcon = @inq_constaints;

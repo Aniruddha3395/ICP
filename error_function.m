@@ -25,6 +25,8 @@ transformation_matrix = [rotation_mat,translation_mat;0 0 0 1];
 transformed_data = apply_transformation(scan_ptcloud,transformation_matrix);
 
 switch error_fun
+    case 'abs_d'
+        Error = sum(sum(abs(corresponding_val_from_model_ptcloud-transformed_data)));
     case 'sum_d'
         % sum of all distances
         Error = sum(dist(corresponding_val_from_model_ptcloud,transformed_data));
