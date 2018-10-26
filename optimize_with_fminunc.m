@@ -11,7 +11,12 @@ x0 = [0 0 0 0 0 0];
 fun = @(x)error_function(x,model_ptcloud,scan_ptcloud,optm_method,error_fun);
 
 options = optimoptions(@fminunc,'Display','iter','Algorithm','quasi-newton');
-[x,fval] = fminunc(fun,x0,options)
+% [x,fval] = fminunc(fun,x0,options)
+
+
+[x,fval,~,output] = simulannealbnd(fun,x0,[],[]);
+
+
 
 rotation_mat = eul2rotm([x(6), x(5), x(4)]);
 translation_mat = [x(1);x(2);x(3)];

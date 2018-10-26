@@ -98,11 +98,11 @@ KDtree = KDTreeSearcher(model_ptcloud);
 
 
 %% decision of selcting the sedd after pertubation....error metric is fval jump
-small_val = 1;
-big_val = 2;
+small_val = 0.5;
+big_val = 5;
 fval_curr = Inf;
-while fval_curr>1
-% for i = 1:50
+while fval_curr>1.6
+% for i = 1:1
 cla;
 
 scan_ptcloud = get_seed_for_icp(tcp_publisher_pts_are_flange_pts);
@@ -134,6 +134,13 @@ end
 end
 
 Final_T
+%%% after this if i apply local optimizer again will it work??
+%%%%try that
+%%%%also make another entry of sa like fmincon ....make other entries if
+%%%%required as well
+
+
+
 
 
 

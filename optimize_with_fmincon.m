@@ -8,17 +8,21 @@ x0 = [0 0 0 1 0 0 0];
 
 fun = @(x)error_function(x,model_ptcloud,scan_ptcloud,optm_method,error_fun);
 nonlcon = @inq_constaints;
-options = optimoptions(@fmincon);
-options.Display = 'none';
-options.MaxIterations = 200;
+% options = optimoptions(@fmincon);
+% options.Display = 'iter';
+% options.MaxIterations = 200;
 % options.UseParallel = true;
 % options.StepTolerance = 1e-10;
 % options.Algorithm = 'interior-point';
 % options.DiffMaxChange = 1e-8;
 % options.FunctionTolerance = 1e-8;
 
-[x,fval,~,output] = fmincon(fun,x0,[],[],[],[],[],[],nonlcon,options);
+% [x,fval,~,output] = fmincon(fun,x0,[],[],[],[],[],[],nonlcon,options);
+[x,fval,~,output] = simulannealbnd(fun,x0,[],[]);
+
+
 % disp([fval, output.iterations]);
+
 
 
 % 
