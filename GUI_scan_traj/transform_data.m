@@ -5,8 +5,11 @@ close all;
 % Choose what color the CAD part needs to be displayed.
 col_matrix = [0.941176, 0.972549, 1];
 
-part_dir = '/home/rflin/Desktop/ICP/CADandSTL/car_bonnet/';
-part = 'sample_file_8_car_bonnet.STL';
+% part_dir = '/home/rflin/Desktop/ICP/CADandSTL/car_bonnet/';
+% part = 'sample_file_8_car_bonnet.STL';
+
+part_dir = '/home/rflin/Desktop/ARM_Sanding/';
+part = 'hb.stl';
 
 [v, f, n, stltitle] = stlRead(strcat(part_dir,part));
 
@@ -34,6 +37,8 @@ scatter3(points(:,1),points(:,2),points(:,3),200,'*','b'); %Plot the Points
 daspect([1 1 1]);
 
 %data for icp ...making values in meters to run the single_iiwa_curve_tracing.m
-xyz_bxbybz(:,1:3) = xyz_bxbybz(:,1:3)./1000;        
-dlmwrite('/home/rflin/Desktop/ICP/GUI_scan_traj/scan_traj_xyz_bxbybz.csv',xyz_bxbybz);
+xyz_bxbybz(:,1:3) = xyz_bxbybz(:,1:3)./1000;
+xyz_bz_output = [xyz_bxbybz(:,1:3), xyz_bxbybz(:,end-3:end)];
+dlmwrite('/home/rflin/Desktop/ARM_Sanding/scan_traj_xyz_bxbybz.csv',xyz_bxbybz);
+dlmwrite('/home/rflin/Desktop/ARM_Sanding/scan_traj_xyz_bz.csv',xyz_bz_output);
 disp(size(xyz_bxbybz));

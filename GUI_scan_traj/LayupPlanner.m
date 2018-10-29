@@ -4,10 +4,15 @@ close all
 dbstop if error;
 
 %% Define part and Plot it
+% 
+% part_dir = '/home/rflin/Desktop/ICP/CADandSTL/car_bonnet/';
+% part = 'sample_file_8_car_bonnet.STL';
+% output_file_dir = '/home/rflin/Desktop/ICP/GUI_scan_traj/';
 
-part_dir = '/home/rflin/Desktop/ICP/CADandSTL/car_bonnet/';
-part = 'sample_file_8_car_bonnet.STL';
+part_dir = '/home/rflin/Desktop/ICP/CADandSTL/arm_sanding/';
+part = 'hb.stl';
 output_file_dir = '/home/rflin/Desktop/ICP/GUI_scan_traj/';
+
 
 global Seed_T;
 
@@ -84,10 +89,11 @@ while 1
     
     [temp_pts,temp_normals,temp_faces] = curve_fit(strt_pt,end_pt,v,f,n);  %Call the curve_fit function
     
-    %     making tool_tip straight
-    temp_normals = zeros(size(temp_normals,1),3) + [0 0 1];
+%     %     making tool_tip straight
+%     temp_normals = zeros(size(temp_normals,1),3) + [0 0 1];
+
     % making pts lower in z direction than they actually are...
-    temp_pts(:,3) = temp_pts(:,3)-10;
+    temp_pts(:,3) = temp_pts(:,3);
     faces = [faces;temp_faces]; % Appendng the faces to the matrix
     points = [points;temp_pts]; % Appending the Points in curve
     xyz = [xyz; temp_pts];
@@ -106,12 +112,16 @@ while 1
     xyz_cba = [xyz_cba; horzcat( temp_pts,bx,by,bz )];
     plot_tcp_local(bx,by,bz,strt_idx,end_idx,points);
     
+    
+    
     %Plot the Points
     scatter3(points(:,1),points(:,2),points(:,3),200,'*','b'); %Plot the Points
     idx = idx + 1;
 end
+xyz_nxnynz = [xyz_cba(:,1:3), xyz_cba(:,end-3:end)];
 
 dlmwrite(strcat(output_file_dir,'xyz_frames.csv'),xyz_cba);
+dlmwrite(strcat(output_file_dir,'xyz_nxnynz.csv'),xyz_nxnynz);
 dlmwrite(strcat(output_file_dir,'Group_IDX.csv'),grp);
 
 run transform_data.m
