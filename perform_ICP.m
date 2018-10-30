@@ -12,6 +12,8 @@ if optm_method=='use_fmincon'
     [ICP_transformation_matrix,fval] = optimize_with_fmincon(model_ptcloud,scan_ptcloud,tx,ty,tz,q0,q1,q2,q3,optm_method,error_fun);
 elseif optm_method=='use_fminunc'
     [ICP_transformation_matrix,fval] = optimize_with_fminunc(model_ptcloud,scan_ptcloud,tx,ty,tz,rx,ry,rz,optm_method,error_fun);
+elseif optm_method=='use_sa'
+    [ICP_transformation_matrix,fval] = optimize_with_sa(model_ptcloud,scan_ptcloud,tx,ty,tz,rx,ry,rz,optm_method,error_fun);
 else
     disp('no such method')
 end

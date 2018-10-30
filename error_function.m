@@ -13,6 +13,7 @@ elseif optm_method == 'use_fminunc'
     tx = x(1);  ty = x(2);  tz = x(3);
     rx = x(4);  ry = x(5);  rz = x(6);
     rotation_mat = eul2rotm([rz,ry,rx]);
+    
 end
 
 % KNN search over KD Tree

@@ -1,7 +1,7 @@
 %% optimizer function: 
 % Optimize with Fminunc
 
-function [transformation_matrix,fval] = optimize_with_fminunc(model_ptcloud,scan_ptcloud,tx,ty,tz,rx,ry,rz,optm_method,error_fun)
+function [transformation_matrix,fval] = optimize_with_sa(model_ptcloud,scan_ptcloud,tx,ty,tz,rx,ry,rz,optm_method,error_fun)
 
 global KDtree;
 
@@ -10,8 +10,11 @@ x0 = [0 0 0 0 0 0];
 
 fun = @(x)error_function(x,model_ptcloud,scan_ptcloud,optm_method,error_fun);
 
-options = optimoptions(@fminunc,'Display','none','Algorithm','quasi-newton');
-[x,fval] = fminunc(fun,x0,options);
+options = optimoptions(@simulannealbnd);
+options.AcceptanceFcn = 'acceptancesa';
+options.FunctionTolerance = 1e-3;
+[x,fval,~,output] = simulannealbnd(fun,x0,[],[],options);
+
 
 rotation_mat = eul2rotm([x(6), x(5), x(4)]);
 translation_mat = [x(1);x(2);x(3)];
