@@ -3,6 +3,7 @@
 
 function [transformation_matrix,fval] = optimize_with_fmincon(model_ptcloud,scan_ptcloud,tx,ty,tz,q0,q1,q2,q3,optm_method,error_fun)
 
+global fval_chk;
 x = [tx,ty,tz,q0,q1,q2,q3];
 x0 = [0 0 0 1 0 0 0];
 
@@ -17,9 +18,15 @@ nonlcon = @inq_constaints;
 % options.DiffMaxChange = 1e-8;
 % options.FunctionTolerance = 1e-8;
 
-% [x,fval,~,output] = fmincon(fun,x0,[],[],[],[],[],[],nonlcon,options);
-[x,fval,~,output] = simulannealbnd(fun,x0,[],[]);
 
+options = optimoptions(@simulannealbnd);
+options.AcceptanceFcn = nonlcon;
+
+% [x,fval,~,output] = fmincon(fun,x0,[],[],[],[],[],[],nonlcon,options);
+[x,fval,~,output] = simulannealbnd(fun,x0,[],[],options);
+% [x,fval,~,output] = ga(fun,7,[],[],[],[],[],[],nonlcon);
+
+fval_chk = fval;
 
 % disp([fval, output.iterations]);
 
@@ -155,7 +162,7 @@ hold on;
 scatter3d(transformed_data,'*');
 
     function [c,ceq] = inq_constaints(x)
-        c = 0;
+        c = fun(x)-fval_chk;
         ceq = (x(4)^2)+(x(5)^2)+(x(6)^2)+(x(7)^2)-1;
     end
 end

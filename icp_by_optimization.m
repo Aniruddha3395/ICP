@@ -16,7 +16,7 @@ global stl_name;
 global model_ptcloud_normals;
 global tcp_publisher_pts_are_flange_pts;
 global scan_ptcloud_file model_ptcloud_file model_ptcloud_normals_file;
-
+global fval_chk;
 
 True_t = [478.0508;-141.7436;312.4528];                   % in mm
 True_r = eul2rotm([0 0 0]);
@@ -24,11 +24,12 @@ True_T = [True_r,True_t;0 0 0 1];
 
 %% Definitions and Inputs
 %%%%%%%%%%%%  input directries  %%%%%%%%%%%%%
-main_dir = '/home/rflin/Desktop/';
+main_dir = 'C:/Users/ABB IRB120/Desktop/';
 %
 stl_file_path = 'ICP/CADandSTL/car_bonnet/';
 stl_file ='sample_file_8_car_bonnet.STL';
 %
+
 raw_scanned_pts_path_dir = 'ICP/test/test_for_car_bonnet/';
 raw_scanned_pts_file_name = 'data_for_ICP.csv';
 raw_scanned_pts_wrt_tcp_file_name = 'data_for_icp_wrt_tcp.csv';
@@ -75,7 +76,7 @@ tcp_publisher_pts_are_flange_pts = true;
 T_part_wrt_base_for_seed = true;
 input_file_pts_from_kuka_scan = false;   %false if input file is from part frame
 % options: use_fmincon, use_fminunc
-optm_method = 'use_fmincon';
+optm_method = 'use_fminunc';
 %options: sum_d, max_d, mean_d, rms_d
 error_fun = 'mean_d';
 %%%%%%%%
@@ -101,7 +102,8 @@ KDtree = KDTreeSearcher(model_ptcloud);
 small_val = 0.5;
 big_val = 5;
 fval_curr = Inf;
-while fval_curr>1.6
+fval_chk = 1000;
+while fval_curr>0.5
 % for i = 1:1
 cla;
 
