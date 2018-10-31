@@ -1,11 +1,12 @@
 %% optimizer function:
 % Optimize with Fmincon
 
-function [transformation_matrix,fval] = optimize_with_fmincon(model_ptcloud,scan_ptcloud,tx,ty,tz,q0,q1,q2,q3,optm_method,error_fun)
+function [transformation_matrix,fval,x] = optimize_with_fmincon(model_ptcloud,scan_ptcloud,tx,ty,tz,q0,q1,q2,q3,optm_method,error_fun)
 
 global fval_chk;
+global x0;
 x = [tx,ty,tz,q0,q1,q2,q3];
-x0 = [0 0 0 1 0 0 0];
+% x0 = [0 0 0 1 0 0 0];
 lb = [-10 -10 -10 -1 -1 -1 -1];
 ub = [10 10 10 1 1 1 1];
 
@@ -18,7 +19,7 @@ options.Display = 'none';
 % options.StepTolerance = 1e-10;
 % options.Algorithm = 'interior-point';
 % options.DiffMaxChange = 1e-8;
-options.FunctionTolerance = 1e-8;
+options.FunctionTolerance = 1e-5;
 
 [x,fval,~,output] = fmincon(fun,x0,[],[],[],[],lb,ub,nonlcon,options);
 
@@ -169,8 +170,8 @@ rotation_mat = quat2rotm([x(4) x(5) x(6) x(7)]);
 translation_mat = [x(1);x(2);x(3)];
 transformation_matrix = [rotation_mat,translation_mat;0 0 0 1];
 transformed_data = apply_transformation(scan_ptcloud,transformation_matrix);
-hold on;
-scatter3d(transformed_data,'*');
+% hold on;
+% scatter3d(transformed_data,'*');
 
     function [c,ceq] = inq_constaints(x)
 %         c = fun(x)-fval_chk;

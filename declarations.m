@@ -1,7 +1,7 @@
 % profile on;
 
 global main_dir;
-global Seed_T tool_T Complete_T KDtree;
+global Seed_T tool_T True_Seed_T Complete_T KDtree;
 global raw_scanned_pts_path_dir raw_scanned_pts_file_name raw_scanned_pts_wrt_tcp_file_name;
 global path_for_storing_sample_data;
 global input_file input_file_pts_from_kuka_scan;
@@ -45,8 +45,8 @@ output_file = 'test_data.csv';
 % Seed/Initial guess transformation of part wrt robot base
 % Seed_t = [476.91;-141.46;310.52];                   % in mm
 % Seed_r = eul2rotm([0 0 0]);                         % in rad (alpha beta gamma rot)
-Seed_t = [471.91;-146.46;303.52];                   % in mm
-Seed_r = eul2rotm([5*pi/180 0 0]);                  % in rad (alpha beta gamma rot)
+Seed_t = [470.91;-151.46;303.52];                   % in mm
+Seed_r = eul2rotm([10*pi/180 5*pi/180 0]);                  % in rad (alpha beta gamma rot)
 
 %%%%%%%%%%
 % %generating new seed for initial guess....distorting x y z and eul angles
@@ -58,6 +58,7 @@ Seed_r = eul2rotm([5*pi/180 0 0]);                  % in rad (alpha beta gamma r
 
 
 Seed_T = [Seed_r,Seed_t;0 0 0 1];
+True_Seed_T = Seed_T;
 
 % Tool frame transformation of TCP wrt Flange (T_tcp_wrt_F)
 tool_t = [-0.2;-0.01;48.6];                    % in mm
@@ -80,7 +81,7 @@ if generate_data
     [model_ptcloud,model_ptcloud_normals] = generate_model_ptcloud_from_STL(stl_name);
     dlmwrite(strcat(main_dir,path_for_storing_sample_data,model_ptcloud_file),model_ptcloud);
     dlmwrite(strcat(main_dir,path_for_storing_sample_data,model_ptcloud_normals_file),model_ptcloud_normals);
-    scan_ptcloud = get_seed_for_icp(tcp_publisher_pts_are_flange_pts);
+    scan_ptcloud = get_seed_for_icp(tcp_publisher_pts_are_flange_pts,false);
     
 else
     model_ptcloud = dlmread(strcat(main_dir,path_for_storing_sample_data,model_ptcloud_file));
