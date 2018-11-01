@@ -2,7 +2,7 @@ function [model_ptcloud,model_ptcloud_normals] = generate_model_ptcloud_from_STL
 
 [v, f, n, ~] = stlRead(STL_file);
 
-use_face_centroid = true;
+use_face_centroid = false;
 
 %make code where get combination of mesh and centroid and where i can
 %assign normals to the mesh pts as well...that will be the avg of

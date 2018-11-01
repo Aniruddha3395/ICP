@@ -21,7 +21,8 @@ True_T = [True_r,True_t;0 0 0 1];
 main_dir = 'C:/Users/ABB IRB120/Desktop/';
 %
 stl_file_path = 'ICP/CADandSTL/car_bonnet/';
-stl_file ='sample_file_8_car_bonnet.STL';
+stl_file = 'car_bonnet_1031_new.stl';
+% stl_file ='sample_file_8_car_bonnet.STL';
 %
 
 raw_scanned_pts_path_dir = 'ICP/test/test_for_car_bonnet/';
@@ -45,7 +46,7 @@ output_file = 'test_data.csv';
 % Seed/Initial guess transformation of part wrt robot base
 % Seed_t = [476.91;-141.46;310.52];                   % in mm
 % Seed_r = eul2rotm([0 0 0]);                         % in rad (alpha beta gamma rot)
-Seed_t = [470.91;-151.46;303.52];                   % in mm
+Seed_t = [470.91;-147.46;303.52];                   % in mm
 Seed_r = eul2rotm([10*pi/180 5*pi/180 0]);                  % in rad (alpha beta gamma rot)
 
 %%%%%%%%%%
@@ -73,7 +74,7 @@ input_file_pts_from_kuka_scan = false;   %false if input file is from part frame
 % options: use_fmincon, use_fminunc
 optm_method = 'use_fmincon';
 %options: sum_d, max_d, mean_d, rms_d
-error_fun = 'mean_d';
+error_fun = 'rms_d';
 %%%%%%%%
 
 stl_name = strcat(main_dir,stl_file_path,stl_file);

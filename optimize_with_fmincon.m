@@ -7,8 +7,10 @@ global fval_chk;
 global x0;
 x = [tx,ty,tz,q0,q1,q2,q3];
 % x0 = [0 0 0 1 0 0 0];
-lb = [-10 -10 -10 -1 -1 -1 -1];
-ub = [10 10 10 1 1 1 1];
+% lb = [-10 -10 -10 -1 -1 -1 -1];
+% ub = [10 10 10 1 1 1 1];
+ub = [];
+lb = [];
 
 fun = @(x)error_function(x,model_ptcloud,scan_ptcloud,optm_method,error_fun);
 nonlcon = @inq_constaints;

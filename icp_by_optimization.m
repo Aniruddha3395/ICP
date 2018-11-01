@@ -17,33 +17,30 @@ scan_ptcloud_start = get_seed_for_icp(tcp_publisher_pts_are_flange_pts,true);
 
 %% decision of selcting the sedd after pertubation....error metric is fval jump
 
-small_val = 2;
+small_val = 1;
 big_val = 10;
 fval_curr = Inf;
 fval_prev = Inf;
 fval_chk = 1000;
 x0 = [0 0 0 1 0 0 0];
-fval_curr_lim = 1;
+fval_curr_lim = 0.5;
 tol = 0.001;
 
 Start_timer = tic;
 while fval_curr>fval_curr_lim
-    %     for i = 1:50
+    % for i = 1:1
     cla;
     scan_ptcloud = get_seed_for_icp(tcp_publisher_pts_are_flange_pts,false);
     [ICP_transformation_matrix,fval_new,x] = perform_ICP(model_ptcloud,scan_ptcloud,optm_method,error_fun);
     
     if abs(fval_new - fval_prev)>tol
-        if fval_prev>fval_new
-            fval_prev = fval_new;
-        end
+        fval_prev = fval_new;
         perturb_val_t = -small_val + 2*small_val*rand(1,3);
         x0(1,1:3) = x(1,1:3) + perturb_val_t;
         perturb_val_r = [-0.5*small_val + small_val*rand(1,3)].*(pi/180);
         x0(1,4:7) = eul2quat(quat2eul(x(1,4:7))+perturb_val_r);
         x0(1,1:3) = x(1,1:3);
         x0(1,4:7) = x(1,4:7);
-        
         if T_part_wrt_base_for_seed
             Complete_T = ICP_transformation_matrix*inv(Seed_T);
         else
@@ -59,12 +56,7 @@ while fval_curr>fval_curr_lim
                 Store_Complete_T = ICP_transformation_matrix*Seed_T;
             end
         end
-        if abs(fval_prev-fval_new)<tol
-            perturb_val_t = -big_val + 2*big_val*rand(1,3);
-            x0(1,1:3) = x(1,1:3) + perturb_val_t;
-            perturb_val_r = [-0.5*big_val + big_val*rand(1,3)].*(pi/180);
-            x0(1,4:7) = eul2quat(quat2eul(x(1,4:7))+perturb_val_r);
-        end
+        scan_ptcloud = scan_ptcloud_start;
         x0 = [0 0 0 1 0 0 0];
         perturb_val_t = -big_val + 2*big_val*rand(3,1);
         Seed_t_new = Seed_T(1:3,4) + perturb_val_t;
@@ -78,6 +70,15 @@ while fval_curr>fval_curr_lim
     end
 end
 
+if fval_curr==Inf
+    fval_curr = fval_new;
+    if T_part_wrt_base_for_seed
+        Store_Complete_T= ICP_transformation_matrix*inv(Seed_T);
+    else
+        Store_Complete_T = ICP_transformation_matrix*Seed_T;
+    end
+end
+
 % if T_part_wrt_base_for_seed
 %     Complete_T = ICP_transformation_matrix*inv(Seed_T);
 % else
@@ -86,7 +87,7 @@ end
 Final_T = inv(Store_Complete_T);
 Final_T
 
-% figure;
+figure;
 scatter3d(model_ptcloud,'.');
 hold on;
 scatter3d(scan_ptcloud_start,'.');
