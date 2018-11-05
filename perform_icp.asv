@@ -12,17 +12,9 @@ ub = [50 50 50 1 1 1 1];
 KDtree = KDTreeSearcher(input_part_ptcloud_icp);
 
 switch type
-    case 'mean_d'
-        fun = @(x)error_function_mean_d(x,input_part_ptcloud_icp,scan_traj,KDtree);
-    case 'max_d'
-        fun = @(x)error_function_max_d(x,input_part_ptcloud_icp,scan_traj,KDtree);
-    case 'weighted_max_mean_d'
-        fun = @(x)error_function_weighted_max_mean_d(x,input_part_ptcloud_icp,scan_traj,KDtree);      
-    case 'mean_plane_d'
-        fun = @(x)error_function_mean_plane_d(x,input_part_ptcloud_icp,scan_traj,KDtree);
-    case 'weighted_max_mean_plane_d'
-        fun = @(x)error_function_weighted_max_mean_plane_d(x,input_part_ptcloud_icp,scan_traj,KDtree);
-end
+    
+% fun = @(x)error_function_mean_d(x,input_part_ptcloud_icp,scan_traj,KDtree);
+fun = @(x)error_function_max_d(x,input_part_ptcloud_icp,scan_traj,KDtree);
 
 nonlcon = @nonlin_constaints;
 options = optimoptions(@fmincon);
