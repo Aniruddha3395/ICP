@@ -1,13 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%DELETE THIS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% make plane fitting code final
-% do double knnsearch...second one on near neighbours of correspondance,
-% get neighbour number to be 5
-% apply plane fitting fitting and get the normal distance from plane to pt
 % try convex hull method if you can
-% apply 0.75*meand + .25*maxd
-% do some different test cases
 % finish kuka code
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -84,10 +78,11 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 if perturb_true_T
-    perturb_val = 9;
-    perturb_val_t = -perturb_val + 2*perturb_val*rand(3,1);
+    perturb_val = 100;
+    perturb_val_t = -perturb_val + 2*perturb_val*rand(3,1)
     input_w_t_p = True_w_T_p(1:3,4) + perturb_val_t;
-    perturb_val_r = [-0.8*perturb_val + 1.6*perturb_val*rand(1,3)].*(pi/180);
+    perturb_val_r = [-0.8*perturb_val + 1.6*perturb_val*rand(1,3)]
+    perturb_val_r = perturb_val_r.*(pi/180);
     % perturb_val_r = [perturb_val + 2*perturb_val*rand(1,3)].*(pi/180);
     input_w_r_p = eul2rotm([rotm2eul(True_w_T_p(1:3,1:3)) + perturb_val_r]);
     input_w_T_p = [input_w_r_p,input_w_t_p;0 0 0 1];
@@ -123,9 +118,9 @@ end
 % type = 'weighted_max_mean_d';
 % type = 'weighted_max_mean_plane_d';
 type = 'mean_plane_d';
-tol = 0.4;
+tol = 0.1;
 perturb_val = 0.6;
-input_w_T_p  = all_input_w_T_p(6);
+input_w_T_p  = all_input_w_T_p(12);
 input_part_ptcloud_icp = apply_transformation(part_ptcloud,input_w_T_p);
 fval_curr = Inf;
 input_part_ptcloud_icp_true = input_part_ptcloud_icp;
@@ -135,7 +130,7 @@ timer_start = tic;
 while fval_curr>tol
 % for i = 1:3
     syms tx ty tz q0 q1 q2 q3;
-    [icp_T,x,fval] = perform_icp(input_part_ptcloud_icp,scan_traj,tx,ty,tz,q0,q1,q2,q3,type);
+    [icp_T,x,fval] = perform_ICP(input_part_ptcloud_icp,scan_traj,tx,ty,tz,q0,q1,q2,q3,type);
     if fval<fval_curr
         fval_curr=fval;
         x0 = x;
@@ -156,8 +151,7 @@ while fval_curr>tol
         %         perturb_seed_val_t = -perturb_seed_val + 2*perturb_seed_val*rand(1,3);
         %         x0(1,1:3) = x(1,1:3) + perturb_seed_val_t;
         %         perturb_seed_val_r = [-0.5*perturb_seed_val + 1*perturb_seed_val*rand(1,3)].*(pi/180);
-        %         x0(1,4:7) = eul2quat(quat2eul(x(1,4:7))+perturb_seed_val_r);
-        
+        %         x0(1,4:7) = eul2quat(quat2eul(x(1,4:7))+perturb_seed_val_r);   
     end
     disp([fval_curr,fval]);
     if toc(timer_start)>120;
@@ -194,9 +188,19 @@ corresponding_val_from_part_ptcloud = transformed_ptcloud(idx,:);
 Error_max_d = max(dist(corresponding_val_from_part_ptcloud,scan_traj));
 Error_mean_d = sum(dist(corresponding_val_from_part_ptcloud,scan_traj))/size(scan_traj,1);
 Error_weighted_max_mean_d = (Error_max_d+Error_mean_d)/2;
-fprintf('max_d :%f,\n mean_d :%f,\n weighted_max_mean_d :%f\n',Error_max_d,Error_mean_d,Error_weighted_max_mean_d);
-disp(Final_w_T_p);
 
+idx = knnsearch(KDtree,scan_traj,'K',5);
+d = zeros(size(scan_traj,1),1);
+for i = 1:size(scan_traj,1)
+corresponding_val_from_part_ptcloud = transformed_ptcloud(idx(i,:),:);
+d(i) = get_pt_to_lsf_plane_dist(scan_traj(i,:),corresponding_val_from_part_ptcloud);
+end
+Error_mean_plane_d = sum(d)/size(d,1);
+Error_max_plane_d = max(d);
+
+fprintf('max_d :%f,\n max_plane_d :%f,\n mean_d :%f,\n mean_plane_d :%f,\n weighted_max_mean_d :%f\n',Error_max_d,Error_max_plane_d,Error_mean_d,Error_mean_plane_d,Error_weighted_max_mean_d);
+
+disp(Final_w_T_p);
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % 
