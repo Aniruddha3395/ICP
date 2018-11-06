@@ -1,47 +1,33 @@
-function [icp_T,x,fval] = perform_icp(input_part_ptcloud_icp,scan_traj,tx,ty,tz,q0,q1,q2,q3,type)
-
-global x0
-
-x = [tx ty tz q0 q1 q2 q3];
-% lb = [-20 -20 -20 -1 -1 -1 -1];
-% ub = [20 20 20 1 1 1 1];
-
-lb = [-50 -50 -50 -1 -1 -1 -1];
-ub = [50 50 50 1 1 1 1];
-
-KDtree = KDTreeSearcher(input_part_ptcloud_icp);
-
-switch type
-    case 'mean_d'
-        fun = @(x)error_function_mean_d(x,input_part_ptcloud_icp,scan_traj,KDtree);
-    case 'max_d'
-        fun = @(x)error_function_max_d(x,input_part_ptcloud_icp,scan_traj,KDtree);
-    case 'weighted_max_mean_d'
-        fun = @(x)error_function_weighted_max_mean_d(x,input_part_ptcloud_icp,scan_traj,KDtree);      
-    case 'mean_plane_d'
-        fun = @(x)error_function_mean_plane_d(x,input_part_ptcloud_icp,scan_traj,KDtree);
-    case 'weighted_max_mean_plane_d'
-        fun = @(x)error_function_weighted_max_mean_plane_d(x,input_part_ptcloud_icp,scan_traj,KDtree);
-end
-
-nonlcon = @nonlin_constaints;
-options = optimoptions(@fmincon);
-options.Display = 'none';
-% options.MaxIterations = 200;
-% options.UseParallel = true;
-% options.StepTolerance = 1e-10;
-% options.Algorithm = 'interior-point';
-% options.DiffMaxChange = 1e-8;
-options.FunctionTolerance = 1e-5;
-
-[x,fval,~,output] = fmincon(fun,x0,[],[],[],[],lb,ub,nonlcon,options);
-
-icp_r = quat2rotm([x(4) x(5) x(6) x(7)]);
-icp_t = [x(1);x(2);x(3)];
-icp_T = [icp_r,icp_t;0 0 0 1];
-
-    function [c,ceq] = nonlin_constaints(x)
-        c= [];
-        ceq = (x(4)^2)+(x(5)^2)+(x(6)^2)+(x(7)^2)-1;
+global x0;
+input_part_ptcloud_icp = apply_transformation(part_ptcloud,input_w_T_p);
+fval_curr = Inf;
+input_part_ptcloud_icp_true = input_part_ptcloud_icp;
+icp_T_final = eye(4);
+x0 = [0 0 0 1 0 0 0];
+timer_start = tic;
+while fval_curr>Error_threshold
+% for i = 1:3
+    syms tx ty tz q0 q1 q2 q3;
+    [icp_T,x,fval] = perform_fmincon(input_part_ptcloud_icp,scan_traj,tx,ty,tz,q0,q1,q2,q3,type);
+    if fval<fval_curr
+        fval_curr=fval;
+        x0 = x;
+        icp_T_final = icp_T*icp_T_final;
+        input_part_ptcloud_icp = apply_transformation(input_part_ptcloud_icp,icp_T);
+        icp_T_final_save = icp_T_final;
+        input_part_ptcloud_icp_save = input_part_ptcloud_icp;
+    else
+        x0 = [0 0 0 1 0 0 0];
+        perturb_val_t = -perturb_val + 2*perturb_val*rand(3,1);
+        icp_t = icp_T(1:3,4) + perturb_val_t;
+        perturb_val_r = [-0.5*perturb_val + 1*perturb_val*rand(1,3)].*(pi/180);
+        icp_r = eul2rotm([rotm2eul(icp_T(1:3,1:3)) + perturb_val_r]);
+        icp_T = [icp_r,icp_t;0 0 0 1];
+        icp_T_final = icp_T*icp_T_final;
+        input_part_ptcloud_icp = apply_transformation(input_part_ptcloud_icp,icp_T); 
+    end
+    disp([fval_curr,fval]);
+    if toc(timer_start)>120
+        break;
     end
 end

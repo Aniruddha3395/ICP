@@ -1,6 +1,12 @@
-clear all; close all;
-% transformation of part wrt robot
-
+% world frame is robot base frame
+clc;
+clear;
+close all;
+dbstop if error;
+set(0, 'DefaultFigureRenderer', 'opengl');
+total_time = tic;
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+global tool_F_T_tcp;
 global w_T_part;
 global part_position;
 global part_orientation;
@@ -9,16 +15,24 @@ global original_f;
 global original_n;
 global original_name;
 global raw_scan_pts_wrt_tcp;
+%%%%%%%%%%%%%%%%%
+% Tool frame transformation of TCP wrt Flange (T_tcp_wrt_F) tool
+% transformation is zero when pts wrt flange
+tool_t = [1.7;0.7;45.6];                    % in mm
+tool_r = eul2rotm([0 0 0]);                    % in rad (alpha beta gamma rot)
+tool_F_T_tcp = [tool_r,tool_t;0 0 0 1];
+
+step = 1/5000;
+% transformation of part wrt robot
+
 
 w_T_part = eye(4);
 
-% part_position = [0,0,0];
-% part_orientation = [0 0 0]; % euler angles. matlab's 'ZYX', real life 'XYZ'
+part_position = [0,0,0];
+part_orientation = [0 0 0]; % euler angles. matlab's 'ZYX', real life 'XYZ'
 
-
-
-part_position = [0.4775,-0.1436,0.3114];
-part_orientation = [0 0 -0.0013]; % euler angles. matlab's 'ZYX', real life 'XYZ'
+part_position = [0.5184,-0.1608,0.3143];
+part_orientation = [-0.0113 0 0]; % euler angles. matlab's 'ZYX', real life 'XYZ'
 
 w_T_part(1:3,1:3) = eul2rotm(part_orientation);
 w_T_part(1:3,4) = part_position';
@@ -35,6 +49,7 @@ daspect([1 1 1])
 xlabel('x');ylabel('y');zlabel('z');
 
 hold on;
+scan_traj = get_traj_wrt_tcp('data_files/data_for_ICP2.csv');
 raw_scan_pts_wrt_tcp = dlmread('scanned_traj.csv');
 raw_scan_pts_wrt_tcp = raw_scan_pts_wrt_tcp./1000;
 scatter3d(raw_scan_pts_wrt_tcp,'.');
@@ -47,36 +62,36 @@ sld1 = uicontrol('Style', 'slider',...
     'String', 'Translate x: ',...
     'Min',-1,'Max',1,'Value',part_position(1),...
     'Position', [1500 800 200 20],...
-    'Callback', @part_plot_x,'Sliderstep',[1/50000 1/50000]);
+    'Callback', @part_plot_x,'Sliderstep',[step step]);
 
 sld2 = uicontrol('Style', 'slider',...
     'String', 'Translate y',...
     'Min',-1,'Max',1,'Value',part_position(2),...
     'Position', [1500 750 200 20],...
-    'Callback', @part_plot_y,'Sliderstep',[1/50000 1/50000]);
+    'Callback', @part_plot_y,'Sliderstep',[step step]);
 
 sld3 = uicontrol('Style', 'slider',...
     'String', 'Translate z',...
     'Min',-1,'Max',1,'Value',part_position(3),...
     'Position', [1500 700 200 20],...
-    'Callback', @part_plot_z,'Sliderstep',[1/50000 1/50000]);
+    'Callback', @part_plot_z,'Sliderstep',[step step]);
 
 sld4 = uicontrol('Style', 'slider',...
     'String', 'Rotate z',...
     'Min',-pi,'Max',pi,'Value',part_orientation(1),...
     'Position', [1500 650 200 20],...
-    'Callback', @part_plot_Alpha,'Sliderstep',[1/50000 1/50000]);
+    'Callback', @part_plot_Alpha,'Sliderstep',[step step]);
 
 sld5 = uicontrol('Style', 'slider',...
     'String', 'Rotate y',...
     'Min',-pi,'Max',pi,'Value',part_orientation(2),...
     'Position', [1500 600 200 20],...
-    'Callback', @part_plot_Beta,'Sliderstep',[1/50000 1/50000]);
+    'Callback', @part_plot_Beta,'Sliderstep',[step step]);
 
 sld6 = uicontrol('Style', 'slider',...
     'String', 'Rotate x',...
     'Min',-pi,'Max',pi,'Value',part_orientation(3),...
     'Position', [1500 550 200 20],...
-    'Callback', @part_plot_Gamma,'Sliderstep',[1/50000 1/50000]);
+    'Callback', @part_plot_Gamma,'Sliderstep',[step step]);
 
 

@@ -13,10 +13,3 @@ corresponding_val_from_model_ptcloud = transformed_data(idx,:);
 Error_max_d = max(dist(corresponding_val_from_model_ptcloud,raw_scan_pts_wrt_tcp));
 Error_mean_d = sum(dist(corresponding_val_from_model_ptcloud,raw_scan_pts_wrt_tcp))/size(raw_scan_pts_wrt_tcp,1);
 disp([Error_max_d*1000,Error_mean_d*1000]);
-
-% True_w_T_p = [
-%         1.0000   -0.0001    0.0002  477.4196
-%     0.0001    1.0000    0.0014 -143.6004
-%    -0.0003   -0.0014    1.0000  311.3996
-%          0         0         0    1.0000
-%     ];
