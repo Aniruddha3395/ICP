@@ -1,8 +1,6 @@
 function [scan_traj_wrt_tcp] = get_traj_wrt_tcp(file_name)
 
-global tool_F_T_tcp;
-global data_file_dir;
-
+global tool_F_T_tcp icp_dir data_file_dir;
 %get appropriate scan data for ICP
 traj_from_kuka_scanning = dlmread(file_name);
 
@@ -22,5 +20,5 @@ end
 
 %saves only xyz and not euler angles
 scan_traj_wrt_tcp = transformed_pt(:,1:3);
-dlmwrite(strcat(data_file_dir,'scanned_traj.csv'),scan_traj_wrt_tcp);
+dlmwrite(strcat(icp_dir,data_file_dir,'scanned_traj.csv'),scan_traj_wrt_tcp);
 end

@@ -16,7 +16,7 @@ run global_CONFIG.m
 type = 'mean_plane_d';
 Error_threshold = 0.1;
 perturb_val = 0.6;
-input_w_T_p  = all_input_w_T_p(17);
+input_w_T_p  = all_input_w_T_p(14);
 run perform_ICP.m 
 % output 
 run show_results.m
@@ -24,6 +24,6 @@ toc(total_time);
 
 % if wanted to execute some trajectory with final transformation:
 %%%%%%%%%%%
-% run compute_traj_wrt_robot_base.m
+run compute_traj_wrt_robot_base.m
 %%%%%%%%%%%
 

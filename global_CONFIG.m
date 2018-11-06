@@ -1,4 +1,4 @@
-global tool_F_T_tcp data_file_dir;
+global tool_F_T_tcp data_file_dir icp_dir;
 %%%%%%%%%%%%%%%%%
 % Tool frame transformation of TCP wrt Flange (T_tcp_wrt_F) tool
 % transformation is zero when pts wrt flange
@@ -6,7 +6,8 @@ tool_t = [1.7;0.7;45.6];                         % in mm
 tool_r = eul2rotm([0 0 0]);                    % in rad (alpha beta gamma rot)
 tool_F_T_tcp = [tool_r,tool_t;0 0 0 1];
 %%%%%%%%%%%%%%%%%
-data_file_dir = 'data_files/data2/';
+icp_dir = 'C:/Users/ABB IRB120/Desktop/';
+data_file_dir = 'ICP_new/data_files/data2/';
 generate_model_data = true;
 generate_scan_traj_data = true;
 
@@ -18,15 +19,16 @@ True_w_T_p = [
     ];
 
 if generate_model_data
-    [part_ptcloud,part_ptcloud_normals] = generate_part_ptcloud_from_part_STL('STL_CAD/car_bonnet_1031_new.stl');
+    [part_ptcloud,part_ptcloud_normals] = generate_part_ptcloud_from_part_STL(...
+        strcat(icp_dir,'ICP_new/STL_CAD/car_bonnet_1031_new.stl'));
 else
-    part_ptcloud = dlmread(strcat(data_file_dir,'part_ptcloud.csv'));
-    part_ptcloud_normals = dlmread(strcat(data_file_dir,'part_ptcloud_normals.csv'));
+    part_ptcloud = dlmread(strcat(icp_dir,data_file_dir,'part_ptcloud.csv'));
+    part_ptcloud_normals = dlmread(strcat(icp_dir,data_file_dir,'part_ptcloud_normals.csv'));
 end
 if generate_scan_traj_data
-    scan_traj = get_traj_wrt_tcp(strcat(data_file_dir,'data_for_ICP.csv'));
+    scan_traj = get_traj_wrt_tcp(strcat(icp_dir,data_file_dir,'data_for_ICP.csv'));
 else
-    scan_traj = dlmread(strcat(data_file_dir,'scanned_traj.csv'));
+    scan_traj = dlmread(strcat(icp_dir,data_file_dir,'scanned_traj.csv'));
 end
 
 

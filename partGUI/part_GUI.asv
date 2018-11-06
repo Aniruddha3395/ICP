@@ -11,7 +11,10 @@ global tool_F_T_tcp;
 global w_T_part;
 global part_position;
 global part_orientation;
-global original_v original_f original_n original_name;
+global original_v;
+global original_f;
+global original_n;
+global original_name;
 global raw_scan_pts_wrt_tcp;
 %%%%%%%%%%%%%%%%%
 icp_dir = 'C:/Users/ABB IRB120/Desktop/';
@@ -33,7 +36,7 @@ part_orientation = [0 0 0]; % euler angles. matlab's 'ZYX', real life 'XYZ'
 w_T_part(1:3,1:3) = eul2rotm(part_orientation);
 w_T_part(1:3,4) = part_position';
 
-[v, f, n, name] = stlRead(strcat(icp_dir,'ICP_new/STL_CAD/car_bonnet_1031_new.stl'));
+[v, f, n, name] = stlRead('ICP_new/STL_CAD/car_bonnet_1031_new.stl');
 original_v = v./1000;     %values in mm
 original_f = f;
 original_n = n;
@@ -45,8 +48,8 @@ daspect([1 1 1])
 xlabel('x');ylabel('y');zlabel('z');
 
 hold on;
-scan_traj = get_traj_wrt_tcp(strcat(icp_dir,'ICP_new/data_files/data2/data_for_ICP.csv'));
-raw_scan_pts_wrt_tcp = dlmread(strcat(icp_dir,'ICP_new/data_files/data2/scanned_traj.csv'));
+scan_traj = get_traj_wrt_tcp('ICP_new/data_files/data2/data_for_ICP.csv');
+raw_scan_pts_wrt_tcp = dlmread('ICP_new/data_files/data2/scanned_traj.csv');
 raw_scan_pts_wrt_tcp = raw_scan_pts_wrt_tcp./1000;
 scatter3d(raw_scan_pts_wrt_tcp,'.');
 

@@ -1,6 +1,6 @@
 function [part_ptcloud,part_ptcloud_normals] = generate_part_ptcloud_from_part_STL(part_stl)
 
-global data_file_dir;
+global icp_dir data_file_dir;
 
 [v, f, n, ~] = stlRead(part_stl);
 
@@ -23,6 +23,6 @@ else
     part_ptcloud = v;
     part_ptcloud_normals = zeros(size(v,1),3);
 end
-dlmwrite(strcat(data_file_dir,'part_ptcloud.csv'),part_ptcloud);
-dlmwrite(strcat(data_file_dir,'part_ptcloud_normals.csv'),part_ptcloud_normals);
+dlmwrite(strcat(icp_dir,data_file_dir,'part_ptcloud.csv'),part_ptcloud);
+dlmwrite(strcat(icp_dir,data_file_dir,'part_ptcloud_normals.csv'),part_ptcloud_normals);
 end

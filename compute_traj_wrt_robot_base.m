@@ -1,13 +1,16 @@
+global icp_dir data_file_dir;
+
 figure;
-input_traj = dlmread('bdry_pts.csv');
-part_ptcloud = dlmread('part_ptcloud.csv');
-model_ptcloud_normals = dlmread('part_ptcloud_normals.csv');
+input_traj = dlmread(strcat(icp_dir,'ICP_new/data_files/bdry_pts.csv'));
+part_ptcloud = dlmread(strcat(icp_dir,data_file_dir,'part_ptcloud.csv'));
+model_ptcloud_normals = dlmread(strcat(icp_dir,data_file_dir,'part_ptcloud_normals.csv'));
 
 % getting correspondance over transfrmed pts for normal info
 num_of_neighbours = 1;
 KDtree = KDTreeSearcher(part_ptcloud);
+
 idx = knnsearch(KDtree,input_traj,'K',num_of_neighbours);
-% corresponding_val_from_model_ptcloud_normals = model_ptcloud_normals(idx,:);
+corresponding_val_from_model_ptcloud_normals = model_ptcloud_normals(idx,:);
 
 corresponding_val_from_model_ptcloud_normals = zeros(size(corresponding_val_from_model_ptcloud_normals,1),3) + [0 0 1];
 [bx,by,bz] = compute_TCP_new(input_traj,corresponding_val_from_model_ptcloud_normals);
@@ -38,5 +41,5 @@ plot_tcp(pts,bx_transformed,by_transformed,bz_transformed);
 %output with respect to robot base and also with respect to TCP
 pts(:,1:3) = pts(:,1:3)./1000;      %making mm to meters
 
-dlmwrite('/home/rflin/Desktop/ICP_new/data_files/test_traj.csv',[pts,bx_transformed,by_transformed,bz_transformed]);
+dlmwrite(strcat(icp_dir,data_file_dir,'test_traj.csv'),[pts,bx_transformed,by_transformed,bz_transformed]);
 disp('file test_data.csv saved in the main directory!')
