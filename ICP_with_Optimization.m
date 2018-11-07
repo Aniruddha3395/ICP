@@ -24,6 +24,6 @@ toc(total_time);
 
 % if wanted to execute some trajectory with final transformation:
 %%%%%%%%%%%
-run compute_traj_wrt_robot_base.m
+% run compute_traj_wrt_robot_base.m
 %%%%%%%%%%%
 

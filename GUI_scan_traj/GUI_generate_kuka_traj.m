@@ -1,4 +1,4 @@
-clear
+clear 
 clc
 close all
 dbstop if error;
@@ -6,12 +6,12 @@ dbstop if error;
 %% Define part and Plot it
 
 global stl_file;
-stl_file = 'STL_CAD/car_bonnet_1031_new.stl';
+stl_file = 'STL_CAD/fender_1106.stl';
 
 global Seed_T;
 
-Seed_t = [521.81;-165.61;312.75];                   % in mm
-Seed_r = eul2rotm([0 0 0]);                         % in rad (alpha beta gamma rot)
+Seed_t = [583.88;346.25;2.74];                      % in mm
+Seed_r = eul2rotm([pi 0 0]);                         % in rad (alpha beta gamma rot)
 Seed_T = [Seed_r,Seed_t;0 0 0 1];
 
 
@@ -32,6 +32,7 @@ patch('Faces',f,'Vertices',v,'FaceVertexCData',col_matrix,'FaceColor',col_matrix
 xlabel('X-Axis')
 ylabel('Y-Axis')
 zlabel('Z-Axis')
+daspect([1 1 1]);
 hold on
 
 %% User-Interface for Selection of Points
