@@ -41,3 +41,13 @@ Error_max_plane_d = max(d);
 
 fprintf('max_d :%f,\n max_plane_d :%f,\n mean_d :%f,\n mean_plane_d :%f,\n weighted_max_mean_d :%f\n',Error_max_d,Error_max_plane_d,Error_mean_d,Error_mean_plane_d,Error_weighted_max_mean_d);
 disp(Final_w_T_p);
+
+%write results into file:
+file_write = fopen('solution_T_1.txt','wt');
+fprintf(file_write,'max_d = %f mm\n\nmax_plane_d = %f mm\n\nmean_d = %f mm\n\nmean_plane_d = %f mm\n\nweighted_max_mean_d = %f mm\n\n',Error_max_d,Error_max_plane_d,Error_mean_d,Error_mean_plane_d,Error_weighted_max_mean_d);
+fprintf(file_write,'Final_w_T_p = \n');
+fprintf(file_write,'%f\t%f\t%f\t%f\n',Final_w_T_p(1,1),Final_w_T_p(1,2),Final_w_T_p(1,3),Final_w_T_p(1,4));
+fprintf(file_write,'%f\t%f\t%f\t%f\n',Final_w_T_p(2,1),Final_w_T_p(2,2),Final_w_T_p(2,3),Final_w_T_p(2,4));
+fprintf(file_write,'%f\t%f\t%f\t%f\n',Final_w_T_p(3,1),Final_w_T_p(3,2),Final_w_T_p(3,3),Final_w_T_p(3,4));
+fprintf(file_write,'%f\t%f\t%f\t%f\n\n',Final_w_T_p(4,1),Final_w_T_p(4,2),Final_w_T_p(4,3),Final_w_T_p(4,4));
+fclose(file_write);

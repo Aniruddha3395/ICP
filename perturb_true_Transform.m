@@ -8,7 +8,7 @@ set(0, 'DefaultFigureRenderer', 'opengl');
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 run global_CONFIG.m
 
-perturb_val = 10;
+perturb_val = 8;
 perturb_val_t = -perturb_val + 2*perturb_val*rand(3,1)
 input_w_t_p = True_w_T_p(1:3,4) + perturb_val_t;
 perturb_val_r = [-0.8*perturb_val + 1.6*perturb_val*rand(1,3)]
@@ -38,3 +38,17 @@ Error_mean_d = sum(dist(corresponding_val_from_part_ptcloud,scan_traj))/size(sca
 fprintf('input_w_T_p:\n\n');
 disp(input_w_T_p);
 fprintf('max_d :%f, mean_d :%f\n',Error_max_d,Error_mean_d);
+
+% file_write = fopen('perturb_data67.txt','wt');
+% fprintf(file_write,'perturb_val_t (x y z ... in mm) = \n');
+% fprintf(file_write,'%f\t%f\t%f\n\n',perturb_val_t(1),perturb_val_t(2),perturb_val_t(3));
+% fprintf(file_write,'perturb_val_r (rx ry rz ... in deg) = \n');
+% fprintf(file_write,'%f\t%f\t%f\n\n',perturb_val_r(1),perturb_val_r(2),perturb_val_r(3));
+% fprintf(file_write,'input_w_T_p = \n');
+% fprintf(file_write,'%f\t%f\t%f\t%f\n',input_w_T_p(1,1),input_w_T_p(1,2),input_w_T_p(1,3),input_w_T_p(1,4));
+% fprintf(file_write,'%f\t%f\t%f\t%f\n',input_w_T_p(2,1),input_w_T_p(2,2),input_w_T_p(2,3),input_w_T_p(2,4));
+% fprintf(file_write,'%f\t%f\t%f\t%f\n',input_w_T_p(3,1),input_w_T_p(3,2),input_w_T_p(3,3),input_w_T_p(3,4));
+% fprintf(file_write,'%f\t%f\t%f\t%f\n\n',input_w_T_p(4,1),input_w_T_p(4,2),input_w_T_p(4,3),input_w_T_p(4,4));
+% fprintf(file_write,'max_d = %f mm\n\n',Error_max_d);
+% fprintf(file_write,'mean_d = %f mm\n\n',Error_mean_d);
+% fclose(file_write);
