@@ -14,7 +14,7 @@ run global_CONFIG.m
 %start T: given by some scanner i.e. input w_T_p
 %start seed for icp: eye(4);
 type = 'mean_plane_d';
-Error_threshold = 0.1;
+Error_threshold = 0.05;
 perturb_val = 0.6;
 input_w_T_p  = all_input_w_T_p(1);
 run perform_ICP.m 

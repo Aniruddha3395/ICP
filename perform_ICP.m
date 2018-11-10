@@ -1,3 +1,4 @@
+fprintf('ICP Started....\n\n');
 global x0;
 input_part_ptcloud_icp = apply_transformation(part_ptcloud,input_w_T_p);
 fval_curr = Inf;
@@ -6,7 +7,7 @@ icp_T_final = eye(4);
 x0 = [0 0 0 1 0 0 0];
 timer_start = tic;
 while fval_curr>Error_threshold
-% for i = 1:3
+    % for i = 1:3
     syms tx ty tz q0 q1 q2 q3;
     [icp_T,x,fval] = perform_fmincon(input_part_ptcloud_icp,scan_traj,tx,ty,tz,q0,q1,q2,q3,type);
     if fval<fval_curr
@@ -24,10 +25,10 @@ while fval_curr>Error_threshold
         icp_r = eul2rotm([rotm2eul(icp_T(1:3,1:3)) + perturb_val_r]);
         icp_T = [icp_r,icp_t;0 0 0 1];
         icp_T_final = icp_T*icp_T_final;
-        input_part_ptcloud_icp = apply_transformation(input_part_ptcloud_icp,icp_T); 
+        input_part_ptcloud_icp = apply_transformation(input_part_ptcloud_icp,icp_T);
     end
     disp([fval_curr,fval]);
-    if toc(timer_start)>120
+    if toc(timer_start)>200
         break;
     end
 end

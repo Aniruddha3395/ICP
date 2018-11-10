@@ -2,12 +2,12 @@ global tool_F_T_tcp data_file_dir icp_dir;
 %%%%%%%%%%%%%%%%%
 % Tool frame transformation of TCP wrt Flange (T_tcp_wrt_F) tool
 % transformation is zero when pts wrt flange
-icp_dir = 'C:/Users/aniru/OneDrive/Desktop/ICP/';
+icp_dir = 'C:/Users/ABB IRB120/Desktop/';
 %%%%%%%%%%%%%%%%%
 [tool_F_T_tcp,data_file_dir,stl_file,True_w_T_p] = data_set(1);
 %%%%%%%%%%%%%%%%%
-generate_model_data = true;
-generate_scan_traj_data = true;
+generate_model_data = false;
+generate_scan_traj_data = false;
 visualize_data = false;
 if generate_model_data
     [part_ptcloud,part_ptcloud_normals] = generate_part_ptcloud_from_part_STL(...

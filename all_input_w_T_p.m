@@ -2,6 +2,13 @@ function return_T  = all_input_w_T_p(num)
 
 Input_w_T_p = {};
 
+
+% % cell 1-13: car bonnet_placement 1
+% % cell 14-22: car bonnet placement 2
+% % cell 23-37: ge blade
+% % cell 38-52: composite mold
+% % cell 53-67: fender
+
 %% data1
 Input_w_T_p{1} = [
     0.9994   -0.0214   -0.0257  478.4168;
@@ -88,9 +95,9 @@ Input_w_T_p{12} = [
     ];
 
 Input_w_T_p{13} = [
-    0.5086   -0.6120    0.6056  428.7078
-    0.0582    0.7262    0.6850 -120.9083
-    -0.8590   -0.3132    0.4050  327.8494
+    0.9730    0.1060   -0.2052  490.1473;
+    -0.1237    0.9895   -0.0754 -140.5755;
+    0.1951    0.0987    0.9758  310.3620;
     0         0         0    1.0000
     ];
 
