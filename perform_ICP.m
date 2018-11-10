@@ -14,6 +14,20 @@ while fval_curr>Error_threshold
         x0 = x;
         icp_T_final = icp_T*icp_T_final;
         input_part_ptcloud_icp = apply_transformation(input_part_ptcloud_icp,icp_T);
+        
+        %%activate this for simulating things
+        %         cla;
+        %         %plotting robot base
+        % %         scatter3(0,0,0,100,'d','filled','r');
+        % %         hold on;
+        % %         quiver3(0,0,0,1,0,0,100,'r');hold on;quiver3(0,0,0,0,1,0,100,'g');hold on;quiver3(0,0,0,0,0,1,100,'b');
+        %         hold on;
+        %         %plotting scan traj
+        %         scatter3d(scan_traj,'*b');
+        %         hold on;
+        %         scatter3d(input_part_ptcloud_icp,'.g');
+        %         pause(0.001);
+        
         icp_T_final_save = icp_T_final;
         input_part_ptcloud_icp_save = input_part_ptcloud_icp;
     else

@@ -6,7 +6,7 @@ global icp_dir;
 
 %%%%%%%%%%<< PATH for ICP >>%%%%%%%%%%%%
 % give appropriate path of ICP folder
-icp_dir = 'C:/Users/ABB IRB120/Desktop/ICP_MAIN/';
+icp_dir = 'C:/Users/ABB IRB120/Desktop/ICP/';
 
 %%%%%%%%%%%%%%%%%%%%%%%%%% << INPUTS >> %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % give appropriate inputs
