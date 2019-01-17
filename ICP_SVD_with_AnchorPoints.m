@@ -98,6 +98,7 @@ for i = 1:100
     
     scan_ptcloud = scan_ptcloud_transformed;
 end
+Transform_mat_new = T_init*Transform_mat_new;
 
 % visualize data
 figure;
