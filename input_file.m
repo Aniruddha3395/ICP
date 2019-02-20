@@ -1,6 +1,7 @@
 clc
 clear;
 close all;
+set(0, 'DefaultFigureRenderer', 'opengl');
 
 %part ptcloud - blue
 %start ptcloud - red
@@ -10,16 +11,13 @@ close all;
 view_data = false;
 %%%%%%%%
 
-global part_pts scan_pts;
+global part_pts scan_pts num_iter;
 part_pts = [];
 scan_pts = [];
-
-
-% model_ptcloud_data = 'mold_reduced2.csv';
-% scan_ptcloud_data = 'HeliBladeSegmented17.csv';
+num_iter = 300;
 
 model_ptcloud_data = 'Blade_ptcloud.csv';
-scan_ptcloud_data = 'BladeScan3.csv';
+scan_ptcloud_data = 'BladeScan1.csv';
 
 if view_data
     model_ptcloud = dlmread(model_ptcloud_data);
@@ -39,8 +37,6 @@ if view_data
     hold on;
     quiver3(s0(1),s0(2),s0(3),nx(1),nx(2),nx(3),200,'r');hold on;quiver3(s0(1),s0(2),s0(3),ny(1),ny(2),ny(3),200,'g');hold on;quiver3(s0(1),s0(2),s0(3),nz(1),nz(2),nz(3),200,'b');
 end
-
-% Transform_mat_new = ICP_SVD(model_ptcloud_data,scan_ptcloud_data)
 
 Transform_mat_new = ICP_SVD_with_AnchorPoints(model_ptcloud_data,scan_ptcloud_data)
 

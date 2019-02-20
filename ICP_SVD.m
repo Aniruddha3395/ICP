@@ -21,7 +21,7 @@ KDtree = KDTreeSearcher(model_ptcloud);
 Transform_mat_new = eye(4);
 Transform_mat_n = eye(4);
 
-for i = 1:100
+for i = 1:1000
     idx = knnsearch(KDtree,scan_ptcloud,'K',1);
     corresponding_val_from_model_ptcloud = model_ptcloud(idx,:);
     dis = dist(corresponding_val_from_model_ptcloud,scan_ptcloud);

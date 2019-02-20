@@ -1,6 +1,6 @@
 function visualize_ICPSVD(model_ptcloud,m0,scan_ptcloud_transformed,s0_transformed,start_scan_ptcloud,nx_transformed,ny_transformed,nz_transformed)
 
-scatter3d(model_ptcloud,'.b')
+scatter3d(model_ptcloud,'.b');
 hold on;
 scatter3(m0(1),m0(2),m0(3),100,'d','filled','b');
 hold on;

@@ -17,6 +17,7 @@ if det(R)>0
 else
     fprintf('Determinant of rotation matrix is negative...')
 end
+end
 
 
 

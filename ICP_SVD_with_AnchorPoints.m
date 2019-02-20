@@ -11,9 +11,8 @@ function Transform_mat_new = ICP_SVD_with_AnchorPoints(model_ptcloud_file,scan_p
 
 disp('...Anchorpoints Selection (Start with Part Pointcloud)...');
 fprintf('\n\n');
-global part_pts scan_pts;
+global part_pts scan_pts num_iter;
 
-set(0, 'DefaultFigureRenderer', 'opengl');
 part_ptcloud = dlmread(model_ptcloud_file);
 scan_ptcloud = dlmread(scan_ptcloud_file);
 start_scan_ptcloud = scan_ptcloud;
@@ -36,7 +35,7 @@ hold on;
 
 fun_flag = generate_AnchorPoints(fig1);
 end
-
+tic;
 %%%%%%%%%%%%%% initial transformation %%%%%%%%%%%%%%%%%%%%
 T_init = eye(4);
 T_init_n = eye(4);
@@ -66,17 +65,16 @@ model_ptcloud = part_ptcloud;
 
 %make KDTree
 KDtree = KDTreeSearcher(model_ptcloud);
-Transform_mat_new = eye(4);
+Transform_mat_new = inv(T_init);
 Transform_mat_n = eye(4);
 
-for i = 1:100
+for i = 1:num_iter
     idx = knnsearch(KDtree,scan_ptcloud,'K',1);
     corresponding_val_from_model_ptcloud = model_ptcloud(idx,:);
-    dis = dist(corresponding_val_from_model_ptcloud,scan_ptcloud);
     
     %get transformation matrix
     Transform_mat = SVD_scan_to_model(corresponding_val_from_model_ptcloud,scan_ptcloud);
-    Transform_mat_new = Transform_mat*Transform_mat_new;
+    Transform_mat_new = inv(Transform_mat)*Transform_mat_new;
     
     scan_ptcloud_transformed = apply_transformation(scan_ptcloud,inv(Transform_mat));
     s0_transformed = apply_transformation(s0,inv(Transform_mat));
@@ -98,8 +96,8 @@ for i = 1:100
     
     scan_ptcloud = scan_ptcloud_transformed;
 end
-Transform_mat_new = T_init*Transform_mat_new;
-
+Transform_mat_new = inv(Transform_mat_new);
+toc;
 % visualize data
 figure;
 visualize_ICPSVD(model_ptcloud,m0,scan_ptcloud_transformed,s0_transformed,...
